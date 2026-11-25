@@ -1,0 +1,14 @@
+[{
+  "modid": "sethome",
+  "name": "Sethome",
+  "description": "Personal home teleport commands: /sethome, /home, /home list, /delhome. No op, no cheats, no permission plugin.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["FrameFlags"],
+  "credits": "Shared Sethome core.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}]

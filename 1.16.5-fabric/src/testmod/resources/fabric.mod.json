@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "sethome_test",
+  "version": "1.0.0",
+  "name": "Sethome in-game probe",
+  "description": "Test-only probe that drives the real Sethome commands and writes sethome-result.txt.",
+  "authors": ["frameflags"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.frameflags.sethome_test.SethomeTestMod"]
+  }
+}

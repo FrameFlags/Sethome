@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "sethome_test",
+  "version": "1.0.0",
+  "name": "Sethome in-game probe (test only)",
+  "description": "In-game test harness; never shipped in product jars.",
+  "authors": ["FrameFlags tests"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": { "main": ["com.frameflags.sethome_test.SethomeProbeFabricMod"] },
+  "depends": { "fabricloader": "*", "minecraft": "*", "fabric-api": "*" }
+}

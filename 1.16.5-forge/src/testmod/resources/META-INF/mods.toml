@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="MIT"
+
+[[mods]]
+modId="sethome_test"
+version="1.0.0"
+displayName="Sethome Test Probe"
+description='''
+Test-only probe: drives the real Sethome commands through Brigadier and writes
+one canonical SETHOME_TEST_RESULT line. Never shipped with the product jar.
+'''
+
+[[dependencies.sethome_test]]
+modId="forge"
+mandatory=true
+versionRange="[36,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.sethome_test]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.5,1.17)"
+ordering="NONE"
+side="BOTH"

@@ -1,0 +1,6 @@
+--version
+26.1.2.76
+--assetIndex
+asset-index
+--assetsDir
+/Users/stevennovak/.gradle/caches/minecraft/assets

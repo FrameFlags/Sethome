@@ -1,0 +1,28 @@
+# Test-only in-game probe for Sethome. Loads in a separate jar and drives the
+# real command dispatcher as a joined player. It deliberately does NOT declare
+# a dependency on "sethome" so a negative control (product jar removed) can
+# still load the probe and report a FAIL result.
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT"
+
+[[mods]]
+modId="sethome_test"
+version="1.0.0"
+displayName="Sethome Test Probe"
+authors="FrameFlags"
+description='''In-game probe that verifies Sethome commands and writes sethome-result.txt.'''
+
+[[dependencies.sethome_test]]
+modId="forge"
+mandatory=true
+versionRange="[43,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.sethome_test]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.19.2,1.20)"
+ordering="NONE"
+side="BOTH"

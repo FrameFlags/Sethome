@@ -79,7 +79,7 @@ jobs:
           else
             grep -q 'SETHOME_TEST_RESULT: FAIL' sethome.log
             grep -q 'product=false' sethome.log
-            grep -q 'limit_rejected' sethome.log
+            grep -q 'reason=no_product' sethome.log
           fi
       - uses: actions/upload-artifact@v4
         if: always()

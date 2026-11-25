@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="sethome"
+version="1.0.0"
+displayName="Sethome"
+authors="FrameFlags"
+description='''Personal home teleport commands: /sethome, /home, /home list, /delhome. No op or permissions plugin required.'''
+
+[[dependencies.sethome]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.sethome]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1,1.21)"
+    ordering="NONE"
+    side="BOTH"

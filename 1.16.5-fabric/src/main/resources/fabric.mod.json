@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "sethome",
+  "version": "${version}",
+  "name": "Sethome",
+  "description": "Personal home teleport commands: /sethome, /home, /delhome.",
+  "authors": ["frameflags"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.frameflags.sethome.SethomeMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.11.6",
+    "fabric": "*",
+    "minecraft": "1.16.5"
+  }
+}
