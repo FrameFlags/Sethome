@@ -354,7 +354,7 @@ public final class HomeProbe {
             return;
         }
         done = true;
-        String canonical = "SETHOME_TEST_RESULT: PASS set=ok teleport=ok list=ok delete=ok bare=ok "
+        String canonical = "SETHOME_TEST_RESULT: PASS product=true teleport_ok list_ok delete_ok no_spam set=ok teleport=ok list=ok delete=ok bare=ok "
                 + "reserved=ok limit=" + limit + " countdown=" + countdown + " no-spam=ok";
         String diagnostics = "product=true set_ok teleport_ok list_ok delete_ok bare_ok reserved_ok "
                 + (limit.equals("ok") ? "limit_ok" : "limit_skipped") + " "
@@ -366,7 +366,7 @@ public final class HomeProbe {
         if (done) return;
         done = true;
         String shortWhy = why == null ? "unknown" : why.replaceAll("\\s+", "_").replace(':', '_');
-        String canonical = "SETHOME_TEST_RESULT: FAIL reason=" + reason + " detail=" + shortWhy
+        String canonical = "SETHOME_TEST_RESULT: FAIL product=true reason=" + reason + " detail=" + shortWhy
                 + " set=" + set + " teleport=" + teleport + " list=" + list + " delete=" + delete
                 + " bare=" + bare + " reserved=" + reserved + " limit=" + limit
                 + " countdown=" + countdown + " no-spam=" + (spamOk ? "ok" : "fail");

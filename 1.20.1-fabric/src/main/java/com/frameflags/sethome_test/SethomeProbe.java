@@ -165,6 +165,7 @@ public final class SethomeProbe {
         check(arrived, "teleport_ok");
         int countdownChats = chatCount() - alphaChatBaseline;
         boolean chatOk = countdownSeconds > 0 ? countdownChats >= 1 && countdownChats <= 2 : countdownChats == 0;
+        System.out.println("[SETHOME_PROBE] countdown diag schedule=" + countdownScheduleOk + " early=" + earlyTeleport + " chats=" + countdownChats + " secs=" + countdownSeconds);
         check(countdownScheduleOk && !earlyTeleport && chatOk, "countdown_ok");
 
         clearChat();

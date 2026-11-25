@@ -86,8 +86,8 @@ public final class SethomeProbe {
         ServerPlayer player = server.getPlayerList().getPlayer(target);
         if (player == null) return;
         int elapsed = tick - startTick;
-        if (elapsed < 40) return;
-        if (elapsed > 1800) {
+        if (elapsed < 5) return;
+        if (elapsed > 600) {
             check(false, "timeout");
             finish();
             return;
@@ -145,11 +145,11 @@ public final class SethomeProbe {
     }
 
     private static void waitAlpha(MinecraftServer server, ServerPlayer player, int tick) {
-        if (tick < alphaDeadline - 5) {
+        if (countdownSeconds > 0 && tick < alphaDeadline) {
             if (!matches(pose(player), farPose)) earlyTeleport = true;
             return;
         }
-        if (tick < alphaDeadline + 5) return;
+        if (tick < alphaDeadline + 1) return;
         boolean arrived = matches(pose(player), alphaPose);
         check(arrived, "teleport_ok");
         check(countdownScheduleOk && !earlyTeleport
@@ -178,7 +178,7 @@ public final class SethomeProbe {
     }
 
     private static void waitBare(ServerPlayer player, int tick) {
-        if (tick < bareDeadline + 5) {
+        if (tick < bareDeadline + 1) {
             if (tick < bareDeadline - 5 && !matches(pose(player), farPose)) bareScheduleOk = false;
             return;
         }
