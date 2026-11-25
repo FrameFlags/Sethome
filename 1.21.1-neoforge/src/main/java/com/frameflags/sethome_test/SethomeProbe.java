@@ -79,6 +79,7 @@ public final class SethomeProbe {
         if (finished || !productPresent || target != null || player == null) return;
         target = player.getUUID();
         startTick = tick;
+        player.setNoGravity(true);
         player.getAbilities().flying = true;
         player.onUpdateAbilities();
         player.setDeltaMovement(Vec3.ZERO);
