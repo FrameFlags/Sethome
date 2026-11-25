@@ -76,7 +76,7 @@ public class SethomeTestMod {
     private float awayPitch;
 
     public SethomeTestMod() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onServerStarted);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
         MinecraftForge.EVENT_BUS.register(this);
     }
 

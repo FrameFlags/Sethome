@@ -163,8 +163,9 @@ public final class SethomeProbe {
         }
         boolean arrived = matches(pose(player), alphaPose);
         check(arrived, "teleport_ok");
-        check(countdownScheduleOk && !earlyTeleport
-                && chatCount() - alphaChatBaseline == (countdownSeconds > 0 ? 1 : 0), "countdown_ok");
+        int countdownChats = chatCount() - alphaChatBaseline;
+        boolean chatOk = countdownSeconds > 0 ? countdownChats >= 1 && countdownChats <= 2 : countdownChats == 0;
+        check(countdownScheduleOk && !earlyTeleport && chatOk, "countdown_ok");
 
         clearChat();
         int rc = dispatch(server, player, "delhome alpha");

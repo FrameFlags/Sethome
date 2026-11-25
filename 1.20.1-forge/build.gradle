@@ -95,7 +95,18 @@ tasks.register('testmodJar', Jar) {
     from('src/testmod/resources')
 }
 
-build.dependsOn testmodJar
+tasks.register('reobfTestmodJar', net.minecraftforge.gradle.userdev.tasks.RenameJarInPlace) {
+    dependsOn testmodJar
+    input = testmodJar.archiveFile
+}
+afterEvaluate {
+    tasks.named('reobfTestmodJar').configure {
+        mappings = tasks.named('reobfJar').get().mappings
+        libraries.from(tasks.named('reobfJar').get().libraries)
+    }
+}
+
+build.dependsOn reobfTestmodJar
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'

@@ -35,8 +35,7 @@ public class SethomeMod {
 
     public SethomeMod() {
         // FML lifecycle events use the mod bus; Forge game events use EVENT_BUS.
-        net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext.get()
-                .getModEventBus().addListener(this::onServerStarted);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(this);
     }
 

@@ -79,11 +79,10 @@ public final class SethomeProbe {
         if (finished || !productPresent || target != null || player == null) return;
         target = player.getUUID();
         startTick = tick;
-        // The probe uses sky poses for the saved/away tests. Hold the player
-        // steady so gravity cannot perturb an exact-pose assertion between
-        // the teleport and the observation tick.
-        player.getAbilities().flying = true;
-        player.onUpdateAbilities();
+        // The probe uses sky poses for the saved/away tests. Pin the entity's
+        // gravity flag server-side so gravity cannot perturb an exact-pose
+        // assertion between the teleport and the observation tick.
+        player.setNoGravity(true);
         player.setDeltaMovement(Vec3.ZERO);
         clearChat();
     }

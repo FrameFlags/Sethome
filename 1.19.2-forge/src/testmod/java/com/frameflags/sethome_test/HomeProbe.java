@@ -382,7 +382,7 @@ public final class HomeProbe {
     }
 
     private void dispatch(String command) throws CommandSyntaxException {
-        server.getCommands().getDispatcher().execute(command, source);
+        server.getCommands().getDispatcher().execute(command.startsWith("/") ? command.substring(1) : command, source);
     }
 
     private List<String> chatSince(int index) {
