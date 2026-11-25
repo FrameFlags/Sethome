@@ -79,6 +79,7 @@ public final class SethomeProbe {
         if (finished || !productPresent || target != null || player == null) return;
         target = player.getUUID();
         startTick = tick;
+        player.setNoGravity(true);
         player.getAbilities().flying = true;
         player.onUpdateAbilities();
         player.setDeltaMovement(Vec3.ZERO);
@@ -189,6 +190,7 @@ public final class SethomeProbe {
             if (tick < bareDeadline - 5 && !matches(pose(player), farPose)) bareScheduleOk = false;
             return;
         }
+        System.out.println("[SETHOME_PROBE] bare diag set=" + bareSetOk + " now=" + pose(player).x + "," + pose(player).y + "," + pose(player).z + "," + pose(player).yaw + "," + pose(player).pitch + " alpha=" + alphaPose.x + "," + alphaPose.y + "," + alphaPose.z + "," + alphaPose.yaw + "," + alphaPose.pitch);
         check(bareSetOk && bareScheduleOk && matches(pose(player), alphaPose), "bare_ok");
 
         if (maxHomes == 1) {
