@@ -24,6 +24,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 /** Static product API shared by every cell's command adapter and tick hook. */
 public final class Sethome {
@@ -163,5 +164,6 @@ public final class Sethome {
         }
         if (level == null) level = player.serverLevel();
         player.teleportTo(level, record.x + 0.5D, record.y + 0.5D, record.z + 0.5D, java.util.Set.of(), record.yaw, record.pitch);
+        player.setDeltaMovement(Vec3.ZERO);
     }
 }

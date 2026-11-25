@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * In-game probe. It never calls product helpers to perform actions: every state change goes
@@ -78,6 +79,9 @@ public final class SethomeProbe {
         if (finished || !productPresent || target != null || player == null) return;
         target = player.getUUID();
         startTick = tick;
+        player.getAbilities().flying = true;
+        player.onUpdateAbilities();
+        player.setDeltaMovement(Vec3.ZERO);
         clearChat();
     }
 
@@ -103,6 +107,7 @@ public final class SethomeProbe {
 
     private static void begin(MinecraftServer server, ServerPlayer player, int tick) {
         player.teleportTo(player.serverLevel(), 100.5D, 64.5D, 100.5D, Set.of(), 90.0F, -10.0F);
+        player.setDeltaMovement(Vec3.ZERO);
         alphaPose = pose(player);
 
         clearChat();
@@ -126,6 +131,7 @@ public final class SethomeProbe {
 
         clearChat();
         player.teleportTo(player.serverLevel(), 1000.5D, 120.5D, 1000.5D, Set.of(), 0.0F, 0.0F);
+        player.setDeltaMovement(Vec3.ZERO);
         farPose = pose(player);
         earlyTeleport = false;
         countdownScheduleOk = countdownSeconds <= 0;
@@ -164,6 +170,7 @@ public final class SethomeProbe {
         check(deleted && oneError, "delete_ok");
 
         player.teleportTo(player.serverLevel(), 1000.5D, 120.5D, 1000.5D, Set.of(), 0.0F, 0.0F);
+        player.setDeltaMovement(Vec3.ZERO);
         clearChat();
         rc = dispatch(server, player, "home");
         if (countdownSeconds > 0) {

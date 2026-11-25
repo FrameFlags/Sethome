@@ -128,7 +128,7 @@ public final class SethomeProbe {
         clearChat();
         moveAway(player);
         earlyTeleport = false;
-        countdownScheduleOk = countdownSeconds <= 0;
+        countdownScheduleOk = true;
 
         rc = dispatch(server, player, "home alpha");
         if (countdownSeconds > 0) {

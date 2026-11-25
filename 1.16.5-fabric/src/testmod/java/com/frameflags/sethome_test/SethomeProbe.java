@@ -373,7 +373,7 @@ public final class SethomeProbe {
 
     private static void dispatch(MinecraftServer server, ServerPlayerEntity player, String command) {
         try {
-            server.getCommandManager().getDispatcher().execute(command, player.getCommandSource());
+            server.getCommandManager().getDispatcher().execute(command.startsWith("/") ? command.substring(1) : command, player.getCommandSource());
         } catch (Throwable error) {
             System.out.println("[SETHOME_PROBE] dispatch_failed cmd=" + command + " error=" + error);
             fail("dispatch_failed", command);
