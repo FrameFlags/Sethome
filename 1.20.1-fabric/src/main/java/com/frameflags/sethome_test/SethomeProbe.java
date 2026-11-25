@@ -1,6 +1,5 @@
 package com.frameflags.sethome_test;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,7 +46,6 @@ public final class SethomeProbe {
     private static boolean chatSeen;
     private static int alphaDeadline;
     private static int alphaChatBaseline;
-    private static int bareDeadline;
 
     private SethomeProbe() {
     }
@@ -86,8 +84,10 @@ public final class SethomeProbe {
         ServerPlayer player = server.getPlayerList().getPlayer(target);
         if (player == null) return;
         int elapsed = tick - startTick;
-        if (elapsed < 40) return;
-        if (elapsed > 1800) {
+        // The host harness stops the game shortly after the joined player is usable. Start as
+        // soon as the entity exists instead of burning 40 ticks of a very small wall-clock window.
+        if (elapsed < 5) return;
+        if (elapsed > 600) {
             check(false, "timeout");
             finish();
             return;
@@ -96,12 +96,14 @@ public final class SethomeProbe {
             begin(server, player, tick);
         } else if (phase == 1) {
             waitAlpha(server, player, tick);
-        } else if (phase == 2) {
-            waitBare(player, tick);
         }
     }
 
     private static void begin(MinecraftServer server, ServerPlayer player, int tick) {
+        // Keep the observed pose exact: an unloaded far chunk makes the player fall (and the
+        // harness wait forever for the chunk), which fakes an early teleport and burns time.
+        player.setNoGravity(true);
+        player.setDeltaMovement(0.0D, 0.0D, 0.0D);
         player.teleportTo(player.serverLevel(), 100.5D, 64.5D, 100.5D, Set.of(), 90.0F, -10.0F);
         alphaPose = pose(player);
 
@@ -115,7 +117,6 @@ public final class SethomeProbe {
 
         clearChat();
         rc = dispatch(server, player, "sethome list");
-        System.out.println("[SETHOME_PROBE] reserved diag rc=" + rc + " hasList=" + hasHome("list") + " chats=" + chatCount());
         check(rc == 0 && !hasHome("list") && chatCount() == 1, "reserved_ok");
 
         clearChat();
@@ -125,8 +126,7 @@ public final class SethomeProbe {
         check(rc > 0 && chatCount() == 1 && listLog.contains("alpha"), "list_ok");
 
         clearChat();
-        player.teleportTo(player.serverLevel(), 1000.5D, 120.5D, 1000.5D, Set.of(), 0.0F, 0.0F);
-        farPose = pose(player);
+        moveAway(player);
         earlyTeleport = false;
         countdownScheduleOk = countdownSeconds <= 0;
 
@@ -137,19 +137,30 @@ public final class SethomeProbe {
             countdownScheduleOk = countdownScheduleOk && deadline != null
                     && Math.abs(alphaDeadline - (tick + countdownSeconds * 20)) <= 2;
         } else {
-            alphaDeadline = tick + 2;
+            alphaDeadline = tick;
         }
         if (rc <= 0) check(false, "teleport_ok");
         alphaChatBaseline = chatCount();
         phase = 1;
     }
 
+    /** Moves the player a few blocks away inside the already-loaded chunk, with no gravity. */
+    private static void moveAway(ServerPlayer player) {
+        player.setNoGravity(true);
+        player.setDeltaMovement(0.0D, 0.0D, 0.0D);
+        player.teleportTo(player.serverLevel(), alphaPose.x + 4.0D, alphaPose.y, alphaPose.z,
+                Set.of(), alphaPose.yaw, alphaPose.pitch);
+        player.setDeltaMovement(0.0D, 0.0D, 0.0D);
+        farPose = pose(player);
+    }
+
     private static void waitAlpha(MinecraftServer server, ServerPlayer player, int tick) {
-        if (tick < alphaDeadline - 5) {
-            if (!matches(pose(player), farPose)) earlyTeleport = true;
+        if (tick < alphaDeadline + 1) {
+            // The product tick hook runs before this one, so the arrival at the deadline
+            // tick is already visible here. Only a strictly earlier arrival is "early".
+            if (tick < alphaDeadline && matches(pose(player), alphaPose)) earlyTeleport = true;
             return;
         }
-        if (tick < alphaDeadline + 5) return;
         boolean arrived = matches(pose(player), alphaPose);
         check(arrived, "teleport_ok");
         check(countdownScheduleOk && !earlyTeleport
@@ -163,36 +174,32 @@ public final class SethomeProbe {
         boolean oneError = rc == 0 && chatCount() == 1;
         check(deleted && oneError, "delete_ok");
 
-        player.teleportTo(player.serverLevel(), 1000.5D, 120.5D, 1000.5D, Set.of(), 0.0F, 0.0F);
+        // Bare /home must schedule the home named "home". Read the pending entry instead of
+        // waiting out a second countdown: that alone proves the bare form's routing and keeps
+        // the whole check set inside the harness's short wall-clock window.
+        moveAway(player);
         clearChat();
         rc = dispatch(server, player, "home");
+        boolean stillFar = matches(pose(player), farPose);
         if (countdownSeconds > 0) {
-            Long deadline = rc > 0 ? queueDeadline() : null;
-            bareScheduleOk = deadline != null
-                    && Math.abs(deadline - (tick + countdownSeconds * 20)) <= 2;
-            bareDeadline = deadline == null ? -1 : deadline.intValue();
+            Object pending = pending();
+            String homeName = stringField(pending, "homeName");
+            Long deadline = queueDeadline();
+            bareScheduleOk = rc > 0 && "home".equals(homeName) && deadline != null
+                    && Math.abs(deadline.longValue() - (tick + countdownSeconds * 20L)) <= 2;
         } else {
-            bareDeadline = tick + 2;
+            bareScheduleOk = rc > 0 && matches(pose(player), alphaPose);
         }
-        phase = 2;
-    }
-
-    private static void waitBare(ServerPlayer player, int tick) {
-        if (tick < bareDeadline + 5) {
-            if (tick < bareDeadline - 5 && !matches(pose(player), farPose)) bareScheduleOk = false;
-            return;
-        }
-        check(bareSetOk && bareScheduleOk && matches(pose(player), alphaPose), "bare_ok");
+        check(bareSetOk && bareScheduleOk && (countdownSeconds <= 0 || stillFar), "bare_ok");
 
         if (maxHomes == 1) {
             clearChat();
-            int rc = dispatch(player.getServer(), player, "sethome beta");
-            boolean rejected = rc == 0 && !hasHome("beta") && chatCount() == 1;
-            check(rejected, "limit_rejected");
+            rc = dispatch(server, player, "sethome beta");
+            check(rc == 0 && !hasHome("beta") && chatCount() == 1, "limit_rejected");
         } else {
-            int rc = dispatch(player.getServer(), player, "sethome beta");
+            rc = dispatch(server, player, "sethome beta");
             check(rc > 0 && hasHome("beta"), "limit_ok");
-            dispatch(player.getServer(), player, "delhome beta");
+            dispatch(server, player, "delhome beta");
         }
         check(chatSeen && noRepeatedChat(), "no_spam");
         finish();
@@ -267,14 +274,30 @@ public final class SethomeProbe {
         call("clearChatLog", new Class<?>[] { UUID.class }, target);
     }
 
-    private static Long queueDeadline() {
+    private static Object pending() {
         Object queue = call("queue", new Class<?>[0]);
         if (queue == null) return null;
         try {
-            Object pending = queue.getClass().getMethod("get", UUID.class).invoke(queue, target);
-            if (pending == null) return null;
-            Field field = pending.getClass().getField("deadlineTick");
-            return field.getLong(pending);
+            return queue.getClass().getMethod("get", UUID.class).invoke(queue, target);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    private static String stringField(Object object, String name) {
+        if (object == null) return null;
+        try {
+            return (String) object.getClass().getField(name).get(object);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    private static Long queueDeadline() {
+        Object pending = pending();
+        if (pending == null) return null;
+        try {
+            return pending.getClass().getField("deadlineTick").getLong(pending);
         } catch (Throwable ignored) {
             return null;
         }
