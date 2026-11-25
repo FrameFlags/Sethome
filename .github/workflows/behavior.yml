@@ -14,28 +14,28 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { cell: 1.12.2-forge,    mc: '1.12.2',  loader: forge,    mrt: forge,    java: '8',  api: none,                  mode: green }
-          - { cell: 1.16.5-forge,    mc: '1.16.5',  loader: forge,    mrt: forge,    java: '16', api: none,                  mode: green }
-          - { cell: 1.16.5-fabric,   mc: '1.16.5',  loader: fabric,   mrt: fabric,   java: '16', api: '0.42.0+1.16.5',       mode: green }
-          - { cell: 1.19.2-forge,    mc: '1.19.2',  loader: forge,    mrt: forge,    java: '17', api: none,                  mode: green }
-          - { cell: 1.20.1-forge,    mc: '1.20.1',  loader: forge,    mrt: forge,    java: '17', api: none,                  mode: green }
-          - { cell: 1.20.1-fabric,   mc: '1.20.1',  loader: fabric,   mrt: fabric,   java: '21', api: '0.92.11+1.20.1',     mode: green, config: countdown }
-          - { cell: 1.21.1-fabric,   mc: '1.21.1',  loader: fabric,   mrt: fabric,   java: '21', api: '0.107.0+1.21.1',     mode: green }
-          - { cell: 1.21.1-neoforge, mc: '1.21.1',  loader: neoforge, mrt: neoforge, java: '21', api: none,                  mode: green }
-          - { cell: 26.1.2-fabric,   mc: '26.1.2',  loader: fabric,   mrt: fabric,   java: '25', api: '0.154.0+26.1.2',     mode: green }
-          - { cell: 26.1.2-neoforge, mc: '26.1.2',  loader: neoforge, mrt: neoforge, java: '25', api: none,                  mode: green }
-          - { cell: 26.3-fabric,     mc: '26.3',    loader: fabric,   mrt: fabric,   java: '25', api: '0.165.0+26.3',       mode: green }
-          - { cell: 26.3-neoforge,   mc: '26.3',    loader: neoforge, mrt: neoforge, java: '25', api: none,                  mode: green }
-          - { cell: 1.12.2-forge,    mc: '1.12.2',  loader: forge,    mrt: forge,    java: '8',  api: none,                  mode: negative }
-          - { cell: 1.16.5-fabric,   mc: '1.16.5',  loader: fabric,   mrt: fabric,   java: '16', api: '0.42.0+1.16.5',       mode: negative }
-          - { cell: 1.20.1-forge,    mc: '1.20.1',  loader: forge,    mrt: forge,    java: '17', api: none,                  mode: negative }
-          - { cell: 26.3-neoforge,   mc: '26.3',    loader: neoforge, mrt: neoforge, java: '25', api: none,                  mode: negative }
+          - { cell: 1.12.2-forge,    mc: '1.12.2',  loader: forge,    mrt: forge,    java: '8',  api: none,                  gradle: '4.9', mode: green }
+          - { cell: 1.16.5-forge,    mc: '1.16.5',  loader: forge,    mrt: forge,    java: '16', api: none,                  gradle: '7.2', mode: green }
+          - { cell: 1.16.5-fabric,   mc: '1.16.5',  loader: fabric,   mrt: fabric,   java: '16', api: '0.42.0',       gradle: '7.2', mode: green }
+          - { cell: 1.19.2-forge,    mc: '1.19.2',  loader: forge,    mrt: forge,    java: '17', api: none,                  gradle: '8.1.1', mode: green }
+          - { cell: 1.20.1-forge,    mc: '1.20.1',  loader: forge,    mrt: forge,    java: '17', api: none,                  gradle: '8.14.3', mode: green }
+          - { cell: 1.20.1-fabric,   mc: '1.20.1',  loader: fabric,   mrt: fabric,   java: '21', api: '0.92.11',     gradle: '9.5.0', mode: green, config: countdown }
+          - { cell: 1.21.1-fabric,   mc: '1.21.1',  loader: fabric,   mrt: fabric,   java: '21', api: '0.107.0',     gradle: '9.5.0', mode: green }
+          - { cell: 1.21.1-neoforge, mc: '1.21.1',  loader: neoforge, mrt: neoforge, java: '21', api: none,                  gradle: '9.2.1', mode: green }
+          - { cell: 26.1.2-fabric,   mc: '26.1.2',  loader: fabric,   mrt: fabric,   java: '25', api: '0.154.0',     gradle: '9.8.2', mode: green }
+          - { cell: 26.1.2-neoforge, mc: '26.1.2',  loader: neoforge, mrt: neoforge, java: '25', api: none,                  gradle: '9.2.1', mode: green }
+          - { cell: 26.3-fabric,     mc: '26.3',    loader: fabric,   mrt: fabric,   java: '25', api: '0.165.0',       gradle: '9.8.2', mode: green }
+          - { cell: 26.3-neoforge,   mc: '26.3',    loader: neoforge, mrt: neoforge, java: '25', api: none,                  gradle: '9.2.1', mode: green }
+          - { cell: 1.12.2-forge,    mc: '1.12.2',  loader: forge,    mrt: forge,    java: '8',  api: none,                  gradle: '4.9', mode: negative }
+          - { cell: 1.16.5-fabric,   mc: '1.16.5',  loader: fabric,   mrt: fabric,   java: '16', api: '0.42.0',       gradle: '7.2', mode: negative }
+          - { cell: 1.20.1-forge,    mc: '1.20.1',  loader: forge,    mrt: forge,    java: '17', api: none,                  gradle: '8.14.3', mode: negative }
+          - { cell: 26.3-neoforge,   mc: '26.3',    loader: neoforge, mrt: neoforge, java: '25', api: none,                  gradle: '9.2.1', mode: negative }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with: { distribution: temurin, 'java-version': '${{ matrix.java }}' }
       - uses: gradle/actions/setup-gradle@v4
-        with: { 'gradle-version': '9.5.0' }
+        with: { 'gradle-version': '${{ matrix.gradle }}' }
       - name: Build cell
         working-directory: ${{ matrix.cell }}
         run: gradle build --no-daemon -x test

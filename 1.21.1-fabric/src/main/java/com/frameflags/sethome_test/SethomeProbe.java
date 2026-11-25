@@ -115,6 +115,7 @@ public final class SethomeProbe {
 
         clearChat();
         rc = dispatch(server, player, "sethome list");
+        System.out.println("[SETHOME_PROBE] reserved diag rc=" + rc + " hasList=" + hasHome("list") + " chats=" + chatCount());
         check(rc == 0 && !hasHome("list") && chatCount() == 1, "reserved_ok");
 
         clearChat();
