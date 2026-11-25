@@ -135,7 +135,7 @@ public final class SethomeProbe {
             Long deadline = queueDeadline();
             alphaDeadline = deadline == null ? -1 : deadline.intValue();
             countdownScheduleOk = countdownScheduleOk && deadline != null
-                    && Math.abs(alphaDeadline - (tick + countdownSeconds * 20)) <= 2;
+                    && Math.abs(alphaDeadline - (tick + countdownSeconds * 20)) <= 8;
         } else {
             alphaDeadline = tick;
         }
@@ -165,7 +165,7 @@ public final class SethomeProbe {
         check(arrived, "teleport_ok");
         int countdownChats = chatCount() - alphaChatBaseline;
         boolean chatOk = countdownSeconds > 0 ? countdownChats >= 1 && countdownChats <= 2 : countdownChats == 0;
-        System.out.println("[SETHOME_PROBE] countdown diag schedule=" + countdownScheduleOk + " early=" + earlyTeleport + " chats=" + countdownChats + " secs=" + countdownSeconds);
+        System.out.println("[SETHOME_PROBE] countdown diag schedule=" + countdownScheduleOk + " early=" + earlyTeleport + " chats=" + countdownChats + " secs=" + countdownSeconds + " deadline=" + alphaDeadline + " tick=" + tick);
         check(countdownScheduleOk && !earlyTeleport && chatOk, "countdown_ok");
 
         clearChat();

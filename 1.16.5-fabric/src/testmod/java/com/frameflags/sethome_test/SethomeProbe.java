@@ -98,7 +98,7 @@ public final class SethomeProbe {
         long elapsed = tick - phaseStart;
         switch (phase) {
             case 0:
-                if (elapsed >= 40L) {
+                if (elapsed >= 5L) {
                     System.out.println("[SETHOME_PROBE] step=set alpha tick=" + tick);
                     setPose(player, START);
                     dispatch(server, player, "/sethome alpha");
@@ -106,7 +106,7 @@ public final class SethomeProbe {
                 }
                 break;
             case 1:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     List<String> messages = newMessages();
                     Pose stored = readHome(uuid, "alpha");
                     boolean msg = countContaining(messages, "alpha") == 1;
@@ -126,14 +126,14 @@ public final class SethomeProbe {
                 }
                 break;
             case 2:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     newMessages();
                     dispatch(server, player, "/home list");
                     advance(tick);
                 }
                 break;
             case 3:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     List<String> messages = newMessages();
                     listOk = countContaining(messages, "alpha") == 1 && messages.size() == 1;
                     if (!listOk) fail("list_message", "count=" + messages.size());
@@ -143,7 +143,7 @@ public final class SethomeProbe {
                 }
                 break;
             case 4:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     newMessages();
                     deleteOk = readHome(uuid, "alpha") == null;
                     if (!deleteOk) fail("delete", "alpha_still_present");
@@ -153,7 +153,7 @@ public final class SethomeProbe {
                 }
                 break;
             case 5:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     List<String> messages = newMessages();
                     afterDeleteOk = messages.size() == 1 && countContaining(messages, "alpha") == 1;
                     if (!afterDeleteOk) fail("home_after_delete", "count=" + messages.size());
@@ -166,7 +166,7 @@ public final class SethomeProbe {
                 }
                 break;
             case 6:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     newMessages();
                     Pose stored = readHome(uuid, "home");
                     if (stored == null || !stored.matches(START)) fail("bare_set", String.valueOf(stored));
@@ -177,7 +177,7 @@ public final class SethomeProbe {
                 }
                 break;
             case 7:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     newMessages();
                     if (!bareHomeOk) fail("bare_home", "pose_not_restored");
                     dispatch(server, player, "/delhome");
@@ -185,7 +185,7 @@ public final class SethomeProbe {
                 }
                 break;
             case 8:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     newMessages();
                     boolean gone = readHome(uuid, "home") == null;
                     bareOk = gone;
@@ -196,7 +196,7 @@ public final class SethomeProbe {
                 }
                 break;
             case 9:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     List<String> messages = newMessages();
                     boolean one = messages.size() == 1;
                     boolean reserved = one && messages.get(0).toLowerCase(Locale.ROOT).contains("reserved");
@@ -232,14 +232,14 @@ public final class SethomeProbe {
                 }
                 break;
             case 10:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     newMessages();
                     dispatch(server, player, "/sethome gamma");
                     advance(tick);
                 }
                 break;
             case 11:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     List<String> messages = newMessages();
                     boolean rejected = messages.size() == 1
                             && messages.get(0).toLowerCase(Locale.ROOT).contains("limit");
@@ -262,7 +262,7 @@ public final class SethomeProbe {
                 }
                 break;
             case 13:
-                if (elapsed >= 2L) {
+                if (elapsed >= 1L) {
                     newMessages();
                     setPose(player, AWAY);
                     dispatch(server, player, "/home beta");
