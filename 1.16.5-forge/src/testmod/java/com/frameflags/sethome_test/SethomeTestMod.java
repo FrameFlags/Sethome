@@ -96,7 +96,7 @@ public class SethomeTestMod {
                 Class.forName("com.frameflags.sethome.Sethome");
             } catch (Throwable missing) {
                 finished = true;
-                String line = "SETHOME_TEST_RESULT: FAIL reason=no-product detail=missing_product_jar"
+                String line = "SETHOME_TEST_RESULT: FAIL reason=no_product product=false detail=missing_product_jar"
                         + " product=false limit_rejected set=fail teleport=fail list=fail"
                         + " delete=fail bare=fail reserved=fail limit=fail countdown=skipped no-spam=fail";
                 writeNegative(line);
@@ -454,11 +454,15 @@ public class SethomeTestMod {
     }
 
     private String resultLine() {
-        String tokens = " set=" + setToken + " teleport=" + teleportToken
+        String tokens = " product=true set=" + setToken + " teleport=" + teleportToken
                 + " list=" + listToken + " delete=" + deleteToken
                 + " bare=" + bareToken + " reserved=" + reservedToken
                 + " limit=" + limitToken + " countdown=" + countdownToken
-                + " no-spam=" + noSpamToken;
+                + " no-spam=" + noSpamToken
+                + " teleport_ok=" + "ok".equals(teleportToken)
+                + " list_ok=" + "ok".equals(listToken)
+                + " delete_ok=" + "ok".equals(deleteToken)
+                + " no_spam=" + "ok".equals(noSpamToken);
         if (!failed && "ok".equals(setToken) && "ok".equals(teleportToken)
                 && "ok".equals(listToken) && "ok".equals(deleteToken)
                 && "ok".equals(bareToken) && "ok".equals(reservedToken)

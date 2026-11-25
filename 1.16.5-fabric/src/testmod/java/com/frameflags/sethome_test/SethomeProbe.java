@@ -83,7 +83,7 @@ public final class SethomeProbe {
             productPresent = detectProduct();
             System.out.println("[SETHOME_PROBE] step=join product=" + productPresent + " tick=" + tick);
             if (!productPresent) {
-                finish("product_missing", "product_jar_absent");
+                finish("no_product", "product_jar_absent");
             }
             return;
         }
